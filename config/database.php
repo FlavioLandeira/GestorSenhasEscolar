@@ -1,23 +1,30 @@
 <?php
-// config/database.php
-
 class Database {
-    private $host = 'localhost';
-    private $db_name = 'sistema_senhas';
-    private $username = 'root';
-    private $password = '';
-    private $conn;
+    private $host = "localhost";
+    private $dbname = "sistema_senhas";
+    private $username = "root";
+    private $password = "";
+    private static $conn;
 
+    // Connect method to create a new connection
     public function connect() {
-        $this->conn = null;
-
+        self::$conn = null;
         try {
-            $this->conn = new PDO('mysql:host=' . $this->host . ';dbname=' . $this->db_name, $this->username, $this->password);
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            self::$conn = new PDO("mysql:host={$this->host};dbname={$this->dbname}", $this->username, $this->password);
+            self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            echo 'Connection Error: ' . $e->getMessage();
+            die("Erro na conexão com a base de dados: " . $e->getMessage());
         }
+        return self::$conn;
+    }
 
-        return $this->conn;
+    // Static method to get the connection
+    public static function getConnection() {
+        if (self::$conn === null) {
+            $database = new Database();
+            self::$conn = $database->connect();
+        }
+        return self::$conn;
     }
 }
+?>

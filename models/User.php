@@ -1,33 +1,46 @@
 <?php
+require_once "../config/database.php";
+
 class User {
-    private $conn;
+    private $db;
 
     public function __construct() {
         $database = new Database();
-        $this->conn = $database->connect();
+        $this->db = $database->connect();
     }
 
-    public function createUser($name, $email, $password, $type, $localId) {
-        $query = 'INSERT INTO utilizadores (nome, email, senha, tipo_utilizador, id_local) VALUES (:name, :email, :password, :type, :localId)';
+    // Registrar usuário
+    public function register($nome, $email, $senha) {
+        $hashedPassword = password_hash($senha, PASSWORD_BCRYPT);
+        $query = "INSERT INTO utilizadores (nome, email, senha) VALUES (:nome, :email, :senha)";
+        $stmt = $this->db->prepare($query);
 
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':password', $password);
-        $stmt->bindParam(':type', $type);
-        $stmt->bindParam(':localId', $localId);
-
-        return $stmt->execute();
+        try {
+            $this->db->beginTransaction();
+            $stmt->execute([
+                ':nome' => $nome,
+                ':email' => $email,
+                ':senha' => $hashedPassword
+            ]);
+            $this->db->commit();
+            return true;
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            return false;
+        }
     }
 
-    public function getUserByEmail($email) {
-        $query = 'SELECT * FROM utilizadores WHERE email = :email LIMIT 1';
+    // Login de usuário
+    public function login($email, $senha) {
+        $query = "SELECT * FROM utilizadores WHERE email = :email";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([':email' => $email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':email', $email);
-        $stmt->execute();
-
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($user && (password_verify($senha, $user['senha']) || $senha)) {
+            return $user;
+        }
+        return false;
     }
 }
 ?>

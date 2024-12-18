@@ -1,38 +1,32 @@
 <?php
+require_once __DIR__ . '/../config/database.php';
+
 class Service {
-    private $conn;
+    private $db;
 
     public function __construct() {
         $database = new Database();
-        $this->conn = $database->connect();
+        $this->db = $database->connect(); // Use the connect() method
     }
 
-    public function createService($name, $price, $localId) {
-        $query = 'INSERT INTO servicos (nome_servico, preco, id_local) VALUES (:name, :price, :localId)';
-
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':price', $price);
-        $stmt->bindParam(':localId', $localId);
-
-        return $stmt->execute();
-    }
-
-    public function deleteService($serviceId) {
-        $query = 'DELETE FROM servicos WHERE id_servico = :serviceId';
-
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':serviceId', $serviceId);
-
-        return $stmt->execute();
-    }
-
-    public function getStatistics() {
-        $query = 'SELECT COUNT(*) as total, AVG(TIMESTAMPDIFF(MINUTE, data_hora_criacao, data_hora_atendimento)) as avg_time FROM senhas';
-        $stmt = $this->conn->prepare($query);
+    public function listarServicos() {
+        $stmt = $this->db->prepare("SELECT * FROM servicos");
         $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+    public function adicionarServico($nomeServico, $preco, $idLocal) {
+        $stmt = $this->db->prepare("INSERT INTO servicos (nome_servico, preco, id_local) VALUES (:nome, :preco, :id_local)");
+        return $stmt->execute([
+            ':nome' => $nomeServico,
+            ':preco' => $preco,
+            ':id_local' => $idLocal
+        ]);
+    }
+
+    public function removerServico($idServico) {
+        $stmt = $this->db->prepare("DELETE FROM servicos WHERE id_servico = :id");
+        return $stmt->execute([':id' => $idServico]);
     }
 }
 ?>
