@@ -5,12 +5,12 @@ require_once "../config/database.php";
 session_start();
 
 class AuthController {
-    private $userModel;
+    public $userModel;
 
     public function __construct() {
+
         $this->userModel = new User();
     }
-
     public function register() {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $nome = $_POST['nome'];

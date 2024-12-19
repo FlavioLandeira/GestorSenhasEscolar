@@ -1,12 +1,12 @@
 <?php
-require_once __DIR__ . '/../config/database.php';
+require_once "../../config/database.php";
 
 class Service {
-    private $db;
+    public $conn;
 
     public function __construct() {
         $database = new Database();
-        $this->db = $database->connect(); // Use the connect() method
+        $this->conn = $database->connect();
     }
 
     public function listarServicos() {
@@ -28,5 +28,13 @@ class Service {
         $stmt = $this->db->prepare("DELETE FROM servicos WHERE id_servico = :id");
         return $stmt->execute([':id' => $idServico]);
     }
+    public function listarServicosPorLocal($idLocal) {
+        $query = "SELECT * FROM servicos WHERE id_local = :id_local";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id_local', $idLocal);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
 }
 ?>

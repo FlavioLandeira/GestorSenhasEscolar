@@ -1,16 +1,14 @@
 <?php
 require_once "../../models/Senha.php";
-session_start();
 
-if (!isset($_SESSION['user']) || $_SESSION['user']['tipo_utilizador'] !== 'cliente') {
-    exit;
-}
-
+$idLocal = $_GET['id_local'];
 $senhaModel = new Senha();
-$idServico = $_GET['id_servico'] ?? null;
 
-if ($idServico) {
-    $fila = $senhaModel->listarFilaPorServico($idServico);
-    echo "<p>Pessoas na fila: " . count($fila) . "</p>";
+$senhas = $senhaModel->listarSenhasPorLocal($idLocal);
+
+$html = "";
+foreach ($senhas as $senha) {
+    $html .= "<p>Senha: {$senha['id_senha']} - Cliente: {$senha['cliente']} - Status: {$senha['status']}</p>";
 }
-?>
+
+echo $html;

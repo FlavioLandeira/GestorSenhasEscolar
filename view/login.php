@@ -10,6 +10,7 @@
         <input type="email" name="email" placeholder="Email" required>
         <input type="password" name="senha" placeholder="Senha" required>
         <button type="submit" name="action" value="login">Entrar</button>
+        <a href="register.php">Register </a>
     </form>
 </body>
 </html>

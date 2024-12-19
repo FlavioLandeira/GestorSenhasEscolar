@@ -1,19 +1,35 @@
 <?php
-require_once "../../models/Senha.php";
 session_start();
+require_once "../../models/Senha.php";
 
-if (!isset($_SESSION['user']) || $_SESSION['user']['tipo_utilizador'] !== 'cliente') {
+// Verificar se o usuário é um funcionário
+if (!isset($_SESSION['user']) || $_SESSION['user']['tipo_utilizador'] !== 'funcionario') {
+    echo "Acesso restrito!";
     exit;
 }
 
+// Inicializando o modelo de Senha
 $senhaModel = new Senha();
-$senhas = $senhaModel->listarSenhasCliente($_SESSION['user']['id_utilizador']);
 
-if (empty($senhas)) {
-    echo "<p>Você não possui senhas no momento.</p>";
-} else {
-    foreach ($senhas as $senha) {
-        echo "<p>Senha ID: {$senha['id_senha']} | Status: {$senha['status']} | Criada em: {$senha['data_hora_criacao']}</p>";
-    }
+// Verificar se o botão de chamar próximo cliente foi clicado
+if (isset($_POST['chamar_cliente'])) {
+    // Chamar o próximo cliente (muda o status da senha para 'em_atendimento')
+    $senhaModel->chamarProximoCliente();
+    echo "Cliente chamado com sucesso!";
+    exit;
 }
+
+// Listar todas as senhas na fila (pendentes)
+$senhas = $senhaModel->listarSenhasFila();
+
+$html = "";
+if (!empty($senhas)) {
+    foreach ($senhas as $senha) {
+        $html .= "<p>Senha: {$senha['id_senha']} - Serviço: {$senha['nome_servico']} - Status: {$senha['status']}</p>";
+    }
+} else {
+    $html = "<p>Não há clientes na fila.</p>";
+}
+
+echo $html;
 ?>

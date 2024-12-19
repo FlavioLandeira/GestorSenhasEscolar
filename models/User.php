@@ -2,30 +2,30 @@
 require_once "../config/database.php";
 
 class User {
-    private $db;
+    private $conn;
 
     public function __construct() {
         $database = new Database();
-        $this->db = $database->connect();
+        $this->conn = $database->getConnection();  // Usa o método público getConnection
     }
 
     // Registrar usuário
     public function register($nome, $email, $senha) {
         $hashedPassword = password_hash($senha, PASSWORD_BCRYPT);
         $query = "INSERT INTO utilizadores (nome, email, senha) VALUES (:nome, :email, :senha)";
-        $stmt = $this->db->prepare($query);
+        $stmt = $this->conn->prepare($query);  // Troquei $this->pdo por $this->conn
 
         try {
-            $this->db->beginTransaction();
+            $this->conn->beginTransaction();  // Troquei $this->pdo por $this->conn
             $stmt->execute([
                 ':nome' => $nome,
                 ':email' => $email,
                 ':senha' => $hashedPassword
             ]);
-            $this->db->commit();
+            $this->conn->commit();  // Troquei $this->pdo por $this->conn
             return true;
         } catch (PDOException $e) {
-            $this->db->rollBack();
+            $this->conn->rollBack();  // Troquei $this->pdo por $this->conn
             return false;
         }
     }
@@ -33,11 +33,11 @@ class User {
     // Login de usuário
     public function login($email, $senha) {
         $query = "SELECT * FROM utilizadores WHERE email = :email";
-        $stmt = $this->db->prepare($query);
+        $stmt = $this->conn->prepare($query);  // Troquei $this->pdo por $this->conn
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user && (password_verify($senha, $user['senha']) || $senha)) {
+        if ($user && password_verify($senha, $user['senha']) || $senha) {
             return $user;
         }
         return false;

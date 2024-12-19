@@ -23,6 +23,6 @@ if ($_SESSION['user']['tipo_utilizador'] !== 'administrador') {
         <li><a href="relatorios.php">Visualizar Relatórios</a></li>
     </ul>
 
-    <a href="../../controllers/logout.php">Sair</a>
+    <a href="../../view/logout.php">Sair</a>
 </body>
 </html>
