@@ -1,29 +1,43 @@
 <?php
-require_once "../../models/Senha.php";
 session_start();
-
 if (!isset($_SESSION['user']) || $_SESSION['user']['tipo_utilizador'] !== 'cliente') {
     header("Location: ../login.php");
     exit;
 }
 
+require_once "../../models/Senha.php";
+
 $senhaModel = new Senha();
-$senhas = $senhaModel->listarHistoricoSenhas($_SESSION['user']['id_utilizador']);
+$historico = $senhaModel->historicoSenhas($_SESSION['user']['id_utilizador']);
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <title>Histórico de Senhas</title>
+    <link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
     <h1>Histórico de Senhas</h1>
-    <ul>
-        <?php foreach ($senhas as $senha): ?>
-            <li>ID: <?= $senha['id_senha']; ?> | Status: <?= $senha['status']; ?> | Atendido em: <?= $senha['data_hora_atendimento']; ?></li>
+    <table>
+        <tr>
+            <th>ID Senha</th>
+            <th>Serviço</th>
+            <th>Status</th>
+            <th>Data de Criação</th>
+            <th>Data de Atendimento</th>
+        </tr>
+        <?php foreach ($historico as $senha): ?>
+        <tr>
+            <td><?= htmlspecialchars($senha['id_senha']); ?></td>
+            <td><?= htmlspecialchars($senha['nome_servico']); ?></td>
+            <td><?= htmlspecialchars($senha['status']); ?></td>
+            <td><?= htmlspecialchars($senha['data_hora_criacao']); ?></td>
+            <td><?= htmlspecialchars($senha['data_hora_atendimento'] ?? 'N/A'); ?></td>
+        </tr>
         <?php endforeach; ?>
-    </ul>
-    <a href="dashboard.php">Voltar</a>
+    </table>
+    <a href="dashboard.php">Voltar ao Painel</a>
 </body>
 </html>

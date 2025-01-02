@@ -13,7 +13,6 @@ class AdminController {
         $this->userModel = new User();
         $this->locationModel = new Location();
     }
-
     public function adicionarServico($name, $price, $localId) {
         return $this->serviceModel->createService($name, $price, $localId);
     }

@@ -1,8 +1,8 @@
 <?php
 session_start();
-if ($_SESSION['user']['tipo_utilizador'] !== 'funcionario') {
+if (!isset($_SESSION['user']) || $_SESSION['user']['tipo_utilizador'] !== 'funcionario') {
     header("Location: ../login.php");
-    exit;
+    exit
 }
 
 require_once "../../models/Local.php";

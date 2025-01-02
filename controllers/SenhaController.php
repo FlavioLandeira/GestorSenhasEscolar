@@ -1,8 +1,6 @@
 <?php
 require_once "../models/Senha.php";
 
-session_start();
-
 class SenhaController {
     private $senhaModel;
 
@@ -10,19 +8,28 @@ class SenhaController {
         $this->senhaModel = new Senha();
     }
 
-    public function retirarSenha() {
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $idServico = $_POST['servico'];
-            $idUtilizador = $_SESSION['user']['id_utilizador'];
-
-            $this->senhaModel->retirarSenha($idUtilizador, $idServico);
-            header("Location: ../view/cliente/dashboard.php");
-            exit;
+    public function retirarSenha($idUsuario, $idServico, $idLocal) {
+        if ($this->senhaModel->retirarSenha($idUsuario, $idServico, $idLocal)) {
+            echo "Senha retirada com sucesso!";
+        } else {
+            echo "Erro ao retirar a senha.";
         }
     }
-}
 
-$senhaController = new SenhaController();
-if (isset($_POST['action']) && $_POST['action'] === 'retirar_senha') {
-    $senhaController->retirarSenha();
+    public function listarSenhas($idLocal) {
+        return $this->senhaModel->listarSenhasPorLocal($idLocal);
+    }
+
+    public function chamarProximaSenha($idLocal) {
+        if ($this->senhaModel->chamarProximaSenha($idLocal)) {
+            echo "Próxima senha chamada com sucesso!";
+        } else {
+            echo "Erro ao chamar a próxima senha.";
+        }
+    }
+
+    public function historicoSenhas($idUsuario) {
+        return $this->senhaModel->historicoSenhas($idUsuario);
+    }
 }
+?>

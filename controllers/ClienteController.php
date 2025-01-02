@@ -1,6 +1,7 @@
 <?php
 require_once "../models/Senha.php";
 require_once "../models/Service.php";
+require_once '../models/Local.php';
 
 class ClienteController {
     private $senhaModel;
@@ -22,9 +23,9 @@ class ClienteController {
             exit;
         }
     }
-
     public function acompanharSenhas() {
         $senhas = $this->senhaModel->listarSenhasCliente($_SESSION['user']['id_utilizador']);
         require_once "../views/cliente/acompanhar_senhas.php";
     }
+    
 }
