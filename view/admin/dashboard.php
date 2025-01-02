@@ -19,7 +19,10 @@ if ($_SESSION['user']['tipo_utilizador'] !== 'administrador') {
     
     <ul>
         <li><a href="gerenciar_servicos.php">Gerenciar Serviços</a></li>
+        <li><a href="gerenciar_local.php">Gerenciar Local</a></li>
         <li><a href="gerenciar_funcionarios.php">Gerenciar Funcionários</a></li>
+        <li><a href="gerenciar_utilizadores.php">Gerenciar Utilizadores</a></li>
+        <li><a href="gerenciar_senhas.php">Gerenciar Senhas</a></li>
         <li><a href="relatorios.php">Visualizar Relatórios</a></li>
     </ul>
 

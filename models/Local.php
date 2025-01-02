@@ -55,16 +55,20 @@ class Local {
     }
 
     // Função para atualizar informações de um local
-    public function atualizarLocal($idLocal, $nome, $descricao) {
-        $query = "UPDATE locais 
-                  SET nome_local = :nome_local, descricao = :descricao 
-                  WHERE id_local = :id_local";
+    public function atualizarLocal($idLocal, $nomeLocal, $descricao) {
+        $query = "
+            UPDATE sistema_senhas.locais 
+            SET nome_local = :nome_local, descricao = :descricao 
+            WHERE id_local = :id_local
+        ";
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':id_local', $idLocal);
-        $stmt->bindParam(':nome_local', $nome);
-        $stmt->bindParam(':descricao', $descricao);
-        return $stmt->execute();
+        return $stmt->execute([
+            ':id_local' => $idLocal,
+            ':nome_local' => $nomeLocal,
+            ':descricao' => $descricao
+        ]);
     }
+    
 
     // Função para remover um local
     public function removerLocal($idLocal) {

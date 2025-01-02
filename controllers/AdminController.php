@@ -1,29 +1,36 @@
 <?php
 require_once '../models/Service.php';
 require_once '../models/User.php';
-require_once '../models/Location.php';
+require_once '../models/Local.php';
 
 class AdminController {
     private $serviceModel;
     private $userModel;
-    private $locationModel;
+    private $localModel;
 
     public function __construct() {
         $this->serviceModel = new Service();
         $this->userModel = new User();
-        $this->locationModel = new Location();
-    }
-    public function adicionarServico($name, $price, $localId) {
-        return $this->serviceModel->createService($name, $price, $localId);
+        $this->localModel = new Local();
     }
 
-    public function removerServico($serviceId) {
-        return $this->serviceModel->deleteService($serviceId);
+    public function listarServicos() {
+        return $this->serviceModel->listarServicos();
     }
 
-    public function visualizarEstatisticas() {
-        return $this->serviceModel->getStatistics();
+    public function listarUtilizadores() {
+        return $this->userModel->listarUtilizadores();
+    }
+
+    public function listarLocais() {
+        return $this->localModel->listarLocais();
+    }
+
+    public function adicionarServico($nome, $preco, $idLocal) {
+        return $this->serviceModel->adicionarServico($nome, $preco, $idLocal);
+    }
+
+    public function removerServico($idServico) {
+        return $this->serviceModel->removerServico($idServico);
     }
 }
-
-?>

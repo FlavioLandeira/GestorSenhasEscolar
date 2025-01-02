@@ -7,7 +7,6 @@ class FuncionarioController {
     public function __construct() {
         $this->senhaModel = new Senha();
     }
-
     public function gerenciarSenhas() {
         $idLocal = $_SESSION['user']['id_local'];
         $senhas = $this->senhaModel->listarSenhasPorLocal($idLocal);

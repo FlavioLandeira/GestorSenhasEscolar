@@ -14,6 +14,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $serviceModel->adicionarServico($_POST['nome'], $_POST['preco'], $_POST['id_local']);
     } elseif (isset($_POST['remover'])) {
         $serviceModel->removerServico($_POST['id_servico']);
+    } elseif (isset($_POST['atualizar'])) {
+        $serviceModel->atualizarServico($_POST['id_servico'],$_POST['nome'],$_POST['preco'],$_POST['id_local']);
     }
 }
 
@@ -50,6 +52,14 @@ $servicos = $serviceModel->listarServicos();
         <?php endforeach; ?>
     </ul>
 
+    <h2>Atualizar Serviço</h2>
+        <form method="POST">
+            ID do Serviço: <input type="text" name="id_servico" required>
+            Nome do Serviço: <input type="text" name="nome" required>
+            Preço: <input type="text" name="preco" required>
+            ID Local: <input type="text" name="id_local" required>
+            <button type="submit" name="atualizar">Atualizar</button>
+        </form>
     <a href="dashboard.php">Voltar</a>
 </body>
 </html>
