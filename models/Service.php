@@ -50,6 +50,16 @@ class Service {
             ':id_local' => $idLocal
         ]);
     }
-    
+    public function listarServicosPorUsuario($idUsuario) {
+        $query = "SELECT se.id_servico, se.nome_servico, se.preco
+                  FROM servicos se
+                  INNER JOIN utilizadores u ON se.id_local = u.id_local
+                  WHERE u.id_utilizador = :id_usuario";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id_usuario', $idUsuario);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }
 ?>

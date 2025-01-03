@@ -1,5 +1,6 @@
 <?php
 require_once "../../models/User.php";
+
 session_start();
 
 if ($_SESSION['user']['tipo_utilizador'] !== 'administrador') {

@@ -8,6 +8,6 @@ if (isset($_SESSION['user'])) {
 }
 
 // Se não estiver logado, redireciona para a página de login
-header("Location: view/login.php");
+header("Location: view/home/login.php");
 exit;
 ?>
