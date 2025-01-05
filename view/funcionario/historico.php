@@ -5,10 +5,7 @@ if ($_SESSION['user']['tipo_utilizador'] !== 'funcionario') {
     exit;
 }
 
-require_once "../../controllers/FuncionarioController.php";
-
-$controller = new FuncionarioController();
-$historico = $controller->visualizarHistorico();
+$historico = isset($historico) ? $historico : [];
 ?>
 
 <!DOCTYPE html>
@@ -17,39 +14,39 @@ $historico = $controller->visualizarHistorico();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Histórico de Atendimentos</title>
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
         <h1>Histórico de Atendimentos</h1>
+        <h2>Bem-vindo, <?php echo $_SESSION['user']['nome']; ?></h2>
     </header>
 
-    <main>
-        <h2>Registros de Atendimentos</h2>
-        <table class="historico-table">
-            <thead>
+    <table>
+        <thead>
+            <tr>
+                <th>Senha</th>
+                <th>Cliente</th>
+                <th>Status</th>
+                <th>Data Criação</th>
+                <th>Data Atendimento</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($historico as $atendimento): ?>
                 <tr>
-                    <th>Senha</th>
-                    <th>Cliente</th>
-                    <th>Serviço</th>
-                    <th>Data/Hora</th>
+                    <td><?php echo htmlspecialchars($atendimento['id_senha']); ?></td>
+                    <td><?php echo htmlspecialchars($atendimento['cliente']); ?></td>
+                    <td><?php echo htmlspecialchars($atendimento['status']); ?></td>
+                    <td><?php echo htmlspecialchars($atendimento['data_hora_criacao']); ?></td>
+                    <td><?php echo htmlspecialchars($atendimento['data_hora_atendimento']); ?></td>
                 </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($historico as $registro): ?>
-                    <tr>
-                        <td><?= $registro['id_senha']; ?></td>
-                        <td><?= $registro['cliente']; ?></td>
-                        <td><?= $registro['servico']; ?></td>
-                        <td><?= $registro['data_hora']; ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </main>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
 
-    <footer>
+    <nav>
         <a href="dashboard.php">Voltar ao Painel</a>
-    </footer>
+    </nav>
 </body>
 </html>

@@ -1,4 +1,6 @@
 <?php
+// Modelo: Funcionario.php
+
 require_once __DIR__ . '/../config/database.php';
 
 class Funcionario {
@@ -12,13 +14,7 @@ class Funcionario {
     // Obter a fila de espera para um local específico
     public function obterFila($idLocal) {
         try {
-            $stmt = $this->conn->prepare("
-                SELECT s.id_senha, u.nome AS cliente, s.data_hora_criacao
-                FROM senhas s
-                JOIN utilizadores u ON s.id_utilizador = u.id_utilizador
-                WHERE s.id_local = :id_local AND s.status = 'em_espera'
-                ORDER BY s.data_hora_criacao ASC
-            ");
+            $stmt = $this->conn->prepare("SELECT * FROM senhas WHERE id_local = :id_local AND status = 'em_espera' ORDER BY data_hora_criacao ASC");
             $stmt->bindParam(':id_local', $idLocal, PDO::PARAM_INT);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -27,33 +23,22 @@ class Funcionario {
             return [];
         }
     }
-    
 
     // Chamar o próximo cliente da fila
     public function chamarProximo($idLocal) {
         try {
             $this->conn->beginTransaction();
 
-            // Buscar o próximo cliente
-            $query = "
-                SELECT id_senha 
-                FROM sistema_senhas.senhas
-                WHERE id_local = :id_local AND status = 'em_espera'
-                ORDER BY data_hora_criacao ASC LIMIT 1
-            ";
-            $stmt = $this->conn->prepare($query);
-            $stmt->execute([':id_local' => $idLocal]);
+            $stmt = $this->conn->prepare("SELECT id_senha FROM senhas WHERE id_local = :id_local AND status = 'em_espera' ORDER BY data_hora_criacao ASC LIMIT 1");
+            $stmt->bindParam(':id_local', $idLocal, PDO::PARAM_INT);
+            $stmt->execute();
+
             $proximaSenha = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($proximaSenha) {
-                // Atualizar status para "em atendimento"
-                $updateQuery = "
-                    UPDATE sistema_senhas.senhas 
-                    SET status = 'em_atendimento', data_hora_atendimento = NOW()
-                    WHERE id_senha = :id_senha
-                ";
-                $updateStmt = $this->conn->prepare($updateQuery);
-                $updateStmt->execute([':id_senha' => $proximaSenha['id_senha']]);
+                $updateStmt = $this->conn->prepare("UPDATE senhas SET status = 'em_atendimento', data_hora_atendimento = NOW() WHERE id_senha = :id_senha");
+                $updateStmt->bindParam(':id_senha', $proximaSenha['id_senha'], PDO::PARAM_INT);
+                $updateStmt->execute();
 
                 $this->conn->commit();
                 return $proximaSenha['id_senha'];
@@ -63,60 +48,86 @@ class Funcionario {
             return null;
         } catch (PDOException $e) {
             $this->conn->rollBack();
-            throw $e;
+            error_log("Erro ao chamar próximo cliente: " . $e->getMessage());
+            return null;
         }
     }
 
-    // Obter o histórico de atendimentos de um local
-    public function obterHistorico($idLocal) {
-        $query = "
-            SELECT s.id_senha, u.nome AS cliente, s.status, s.data_hora_criacao, s.data_hora_atendimento
-            FROM sistema_senhas.senhas s
-            INNER JOIN sistema_senhas.utilizadores u ON s.id_utilizador = u.id_utilizador
-            WHERE s.id_local = :id_local AND s.status = 'concluido'
-            ORDER BY s.data_hora_atendimento DESC
-        ";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute([':id_local' => $idLocal]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    // Concluir atendimento (mantendo apenas uma implementação)
     public function concluirAtendimento($idSenha) {
         try {
-            $this->conn->beginTransaction();
-    
-            // Concluir o atendimento atual
-            $updateQuery = "UPDATE senhas SET status = 'concluido' WHERE id_senha = :id_senha";
-            $stmt = $this->conn->prepare($updateQuery);
-            $stmt->execute([':id_senha' => $idSenha]);
-    
-            // Buscar o próximo cliente na fila
-            $proximoQuery = "
-                SELECT id_senha 
-                FROM senhas
-                WHERE status = 'em_espera'
-                ORDER BY data_hora_criacao ASC LIMIT 1
-            ";
-            $proximoStmt = $this->conn->prepare($proximoQuery);
-            $proximoStmt->execute();
-            $proximoCliente = $proximoStmt->fetch(PDO::FETCH_ASSOC);
-    
-            if ($proximoCliente) {
-                // Atualizar o próximo cliente para "em atendimento"
-                $updateProximoQuery = "
-                    UPDATE senhas 
-                    SET status = 'em_atendimento', data_hora_atendimento = NOW()
-                    WHERE id_senha = :id_senha
-                ";
-                $updateProximoStmt = $this->conn->prepare($updateProximoQuery);
-                $updateProximoStmt->execute([':id_senha' => $proximoCliente['id_senha']]);
-            }
-    
-            $this->conn->commit();
-            return true;
+            $stmt = $this->conn->prepare("UPDATE senhas SET status = 'concluido', data_hora_atendimento = NOW() WHERE id_senha = :id_senha");
+            $stmt->bindParam(':id_senha', $idSenha, PDO::PARAM_INT);
+            return $stmt->execute();
         } catch (PDOException $e) {
-            $this->conn->rollBack();
             error_log("Erro ao concluir atendimento: " . $e->getMessage());
             return false;
+        }
+    }    
+
+    // Obter o histórico de atendimentos de um local
+    public function obterHistorico($idLocal) {
+        try {
+            $stmt = $this->conn->prepare("SELECT s.id_senha, u.nome AS cliente, s.status, s.data_hora_criacao, s.data_hora_atendimento FROM senhas s JOIN utilizadores u ON s.id_utilizador = u.id_utilizador WHERE s.id_local = :id_local AND s.status = 'concluido' ORDER BY s.data_hora_atendimento DESC");
+            $stmt->bindParam(':id_local', $idLocal, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erro ao obter histórico: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    // Gerar relatórios para o funcionário
+    public function gerarRelatorios($idLocal) {
+        try {
+            $stmt = $this->conn->prepare("SELECT id_relatorio, descricao, data_geracao FROM relatorios WHERE id_local = :id_local ORDER BY data_geracao DESC");
+            $stmt->bindParam(':id_local', $idLocal, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erro ao gerar relatórios: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    // Gerar relatório detalhado de atendimentos
+    public function gerarRelatorioAtendimentos($idLocal) {
+        try {
+            $query = "
+                SELECT s.id_senha, u.nome AS cliente, s.status, s.data_hora_criacao, s.data_hora_atendimento
+                FROM senhas s
+                INNER JOIN utilizadores u ON s.id_utilizador = u.id_utilizador
+                WHERE s.id_local = :id_local
+                ORDER BY s.data_hora_atendimento DESC
+            ";
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':id_local', $idLocal, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erro ao gerar relatório: " . $e->getMessage());
+            return [];
+        }
+    }
+    public function listarFila($id_local) {
+        try {
+            $stmt = $this->conn->prepare("
+                SELECT 
+                    s.id_senha, 
+                    u.nome AS nome_cliente, 
+                    s.data_hora_criacao 
+                FROM senhas s
+                JOIN utilizadores u ON s.id_utilizador = u.id_utilizador
+                WHERE s.id_local = :id_local AND s.status = 'em_espera'
+                ORDER BY s.data_hora_criacao ASC
+            ");
+            $stmt->bindParam(':id_local', $id_local, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erro ao listar fila: " . $e->getMessage());
+            return [];
         }
     }
     

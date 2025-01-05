@@ -1,5 +1,5 @@
 <?php
-require_once "../../config/database.php";
+require_once __DIR__ . "../../config/database.php";
 
 class Service {
     public $conn;
@@ -30,11 +30,15 @@ class Service {
     }
 
     public function listarServicosPorLocal($idLocal) {
-        $query = "SELECT * FROM servicos WHERE id_local = :id_local";
-        $stmt = $this->conn->prepare($query); 
-        $stmt->bindParam(':id_local', $idLocal);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $stmt = $this->conn->prepare("SELECT * FROM servicos WHERE id_local = :id_local");
+            $stmt->bindParam(':id_local', $idLocal, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erro ao listar serviços por local: " . $e->getMessage());
+            return [];
+        }
     }
     public function atualizarServico($idServico, $nomeServico, $preco, $idLocal) {
         $query = "
@@ -59,6 +63,17 @@ class Service {
         $stmt->bindParam(':id_usuario', $idUsuario);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function obterServicosPorLocal($idLocal) {
+        try {
+            $stmt = $this->conn->prepare("SELECT id_servico, nome_servico FROM servicos WHERE id_local = :id_local");
+            $stmt->bindParam(':id_local', $idLocal, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erro ao obter serviços por local: " . $e->getMessage());
+            return [];
+        }
     }
 
 }

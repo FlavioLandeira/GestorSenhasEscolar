@@ -5,10 +5,7 @@ if ($_SESSION['user']['tipo_utilizador'] !== 'funcionario') {
     exit;
 }
 
-require_once "../../controllers/FuncionarioController.php";
-
-$controller = new FuncionarioController();
-$relatorios = $controller->gerarRelatoriosFunc();
+$relatorio = isset($relatorio) ? $relatorio : [];
 ?>
 
 <!DOCTYPE html>
@@ -17,39 +14,39 @@ $relatorios = $controller->gerarRelatoriosFunc();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatórios</title>
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>Relatórios</h1>
+        <h1>Relatórios de Atendimentos</h1>
+        <h2>Bem-vindo, <?php echo $_SESSION['user']['nome']; ?></h2>
     </header>
 
-    <main>
-        <h2>Relatórios Gerados</h2>
-        <table class="relatorios-table">
-            <thead>
+    <table>
+        <thead>
+            <tr>
+                <th>Senha</th>
+                <th>Cliente</th>
+                <th>Status</th>
+                <th>Data Criação</th>
+                <th>Data Atendimento</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($relatorio as $item): ?>
                 <tr>
-                    <th>ID Relatório</th>
-                    <th>Descrição</th>
-                    <th>Data</th>
-                    <th>Ação</th>
+                    <td><?php echo htmlspecialchars($item['id_senha']); ?></td>
+                    <td><?php echo htmlspecialchars($item['cliente']); ?></td>
+                    <td><?php echo htmlspecialchars($item['status']); ?></td>
+                    <td><?php echo htmlspecialchars($item['data_hora_criacao']); ?></td>
+                    <td><?php echo htmlspecialchars($item['data_hora_atendimento']); ?></td>
                 </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($relatorios as $relatorio): ?>
-                    <tr>
-                        <td><?= $relatorio['id_relatorio']; ?></td>
-                        <td><?= $relatorio['descricao']; ?></td>
-                        <td><?= $relatorio['data_geracao']; ?></td>
-                        <td><a href="download.php?id=<?= $relatorio['id_relatorio']; ?>">Baixar</a></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </main>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
 
-    <footer>
+    <nav>
         <a href="dashboard.php">Voltar ao Painel</a>
-    </footer>
+    </nav>
 </body>
 </html>

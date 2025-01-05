@@ -83,7 +83,85 @@ class User {
             ':id_local' => $idLocal
         ]);
     }
-    
+    public function obterLocais() {
+        try {
+            $stmt = $this->conn->prepare("SELECT * FROM locais");
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erro ao obter locais: " . $e->getMessage());
+            return [];
+        }
+    }
 
+    // Obter serviços de um local
+    public function obterServicosPorLocal($idLocal) {
+        try {
+            $stmt = $this->conn->prepare("SELECT * FROM servicos WHERE id_local = :id_local");
+            $stmt->bindParam(':id_local', $idLocal, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erro ao obter serviços: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    // Criar senha para o cliente
+    public function criarSenha($idUtilizador, $idLocal, $idServico) {
+        try {
+            $stmt = $this->conn->prepare("
+                INSERT INTO senhas (id_utilizador, id_local, id_servico, status, data_hora_criacao) 
+                VALUES (:id_utilizador, :id_local, :id_servico, 'em_espera', NOW())
+            ");
+            $stmt->bindParam(':id_utilizador', $idUtilizador, PDO::PARAM_INT);
+            $stmt->bindParam(':id_local', $idLocal, PDO::PARAM_INT);
+            $stmt->bindParam(':id_servico', $idServico, PDO::PARAM_INT);
+            $stmt->execute();
+            return $this->conn->lastInsertId();
+        } catch (PDOException $e) {
+            error_log("Erro ao criar senha: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    // Verificar posição na fila
+    public function obterPosicaoNaFila($idSenha, $idLocal) {
+        try {
+            $stmt = $this->conn->prepare("
+                SELECT COUNT(*) AS posicao
+                FROM senhas
+                WHERE id_local = :id_local AND status = 'em_espera' AND data_hora_criacao < (
+                    SELECT data_hora_criacao FROM senhas WHERE id_senha = :id_senha
+                )
+            ");
+            $stmt->bindParam(':id_local', $idLocal, PDO::PARAM_INT);
+            $stmt->bindParam(':id_senha', $idSenha, PDO::PARAM_INT);
+            $stmt->execute();
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $resultado['posicao'] + 1; // Posição real na fila
+        } catch (PDOException $e) {
+            error_log("Erro ao obter posição na fila: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    // Obter tempo estimado de espera
+    public function obterTempoEstimado($idLocal) {
+        try {
+            $stmt = $this->conn->prepare("
+                SELECT AVG(TIMESTAMPDIFF(MINUTE, data_hora_criacao, data_hora_atendimento)) AS tempo_medio
+                FROM senhas
+                WHERE id_local = :id_local AND status = 'concluido'
+            ");
+            $stmt->bindParam(':id_local', $idLocal, PDO::PARAM_INT);
+            $stmt->execute();
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $resultado['tempo_medio'] ?? 5; // Tempo médio em minutos, padrão 5 minutos
+        } catch (PDOException $e) {
+            error_log("Erro ao obter tempo estimado: " . $e->getMessage());
+            return null;
+        }
+    }
 }
 ?>

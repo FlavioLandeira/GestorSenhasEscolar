@@ -1,96 +1,69 @@
 <?php
-require_once __DIR__ . "/../models/Senha.php";
-require_once __DIR__ . "/../models/Funcionario.php";
+// FuncionarioController.php
+
+require_once __DIR__ . '/../models/Senha.php';
+require_once __DIR__ . '/../models/Funcionario.php';
 
 class FuncionarioController {
     private $senhaModel;
     private $funcionarioModel;
-    private $db; // Adicionado para conexão com o banco de dados
 
     public function __construct() {
-        if (!isset($_SESSION['user'])) {
-            header("Location: ../view/login.php"); // Redireciona para login se a sessão não for válida
+        if (!isset($_SESSION['user']) || $_SESSION['user']['tipo_utilizador'] !== 'funcionario') {
+            header("Location: ../view/login.php");
             exit;
         }
 
-        // Inicializar os modelos
         $this->senhaModel = new Senha();
         $this->funcionarioModel = new Funcionario();
-
-        // Inicializar a conexão com o banco de dados
-        try {
-            $this->db = new PDO('mysql:host=localhost;dbname=gestor_senhas', 'root', '');
-            $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
-            die("Erro ao conectar ao banco de dados: " . $e->getMessage());
-        }
     }
-
-    // Gerenciar fila do local gerido
-    public function gerenciarFila() {
-        $idLocal = $_SESSION['user']['id_local'];
-        return $this->funcionarioModel->obterFila($idLocal);
-    }
-    
-
-    // Chamar próximo cliente da fila
-    public function chamarProximoCliente() {
-        $idLocal = $_SESSION['user']['id_local'];
-        $proximoCliente = $this->senhaModel->chamarProximo($idLocal);
-
-        if ($proximoCliente) {
-            $_SESSION['mensagem'] = "Próximo cliente chamado: Senha " . $proximoCliente['id_senha'];
-        } else {
-            $_SESSION['mensagem'] = "Nenhum cliente na fila.";
-        }
-    }
-    
-
-    // Visualizar histórico de atendimentos
-    public function visualizarHistorico() {
-        $idLocal = $_SESSION['user']['id_local'];
-        $historico = $this->funcionarioModel->obterHistorico($idLocal);
-        require_once "../../view/funcionario/historico.php";
-    }
-
-    // Gerar relatórios para o funcionário
-    public function gerarRelatoriosFunc() {
-        try {
-            $stmt = $this->db->prepare("SELECT id_relatorio, descricao, data_geracao FROM relatorios WHERE tipo_utilizador = :tipo ORDER BY data_geracao DESC");
-            $stmt->execute(['tipo' => 'funcionario']);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            error_log("Erro ao buscar relatórios: " . $e->getMessage());
-            return [];
-        }
-    }
-
-    // Buscar relatório por ID
-    public function buscarRelatorioPorId($idRelatorio) {
-        try {
-            $stmt = $this->db->prepare("SELECT conteudo FROM relatorios WHERE id_relatorio = :id");
-            $stmt->execute(['id' => $idRelatorio]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            error_log("Erro ao buscar relatório por ID: " . $e->getMessage());
-            return null;
-        }
-    }
-    public function concluirAtendimento($idSenha) {
+    // Atender cliente
+    public function atenderCliente($idSenha) {
         $resultado = $this->funcionarioModel->concluirAtendimento($idSenha);
-    
+
         if ($resultado) {
-            // Após concluir, chamar o próximo cliente
-            $idLocal = $_SESSION['user']['id_local'];
-            $proximoCliente = $this->senhaModel->chamarProximo($idLocal);
-    
-            if ($proximoCliente) {
-                $_SESSION['mensagem'] = "Atendimento da senha $idSenha concluído com sucesso. Próximo cliente chamado: Senha $proximoCliente.";
-            } else {
-                $_SESSION['mensagem'] = "Atendimento da senha $idSenha concluído com sucesso. Não há mais clientes na fila.";
-            }
+            $_SESSION['mensagem'] = "Cliente atendido com sucesso.";
         } else {
-            $_SESSION['mensagem'] = "Erro ao concluir atendimento.";
+            $_SESSION['mensagem'] = "Erro ao atender cliente.";
+        }
+
+        header("Location: ../../view/funcionario/gestao_fila.php");
+    }
+
+    public function gerenciarFila() {
+        $funcionarioModel = new Funcionario();
+        $id_local = $_SESSION['user']['id_local']; // Pegue o ID do local do funcionário logado
+        return $funcionarioModel->listarFila($id_local);
+    }
+    
+
+    // Chamar o próximo cliente
+    public function chamarProximoCliente()
+    {
+        $id_local = $_SESSION['user']['id_local'];
+
+        if ($this->senhaModel->chamarProximoCliente($id_local)) {
+            $_SESSION['mensagem'] = "Próximo cliente chamado com sucesso!";
+        } else {
+            $_SESSION['mensagem'] = "Erro ao chamar o próximo cliente.";
         }
     }
+
+    // Concluir atendimento
+    public function concluirAtendimento($idSenha) {
+        $funcionarioModel = new Funcionario();
+    
+        // Atualizar o status para "concluído"
+        if ($funcionarioModel->concluirAtendimento($idSenha)) {
+            $_SESSION['mensagem'] = "Atendimento da senha $idSenha concluído com sucesso!";
+        } else {
+            $_SESSION['mensagem'] = "Erro ao concluir o atendimento da senha $idSenha.";
+        }
+    
+        // Redirecionar para evitar reenvio do formulário
+        header("Location: gestao_fila.php");
+        exit;
+    }
+    
 }
+

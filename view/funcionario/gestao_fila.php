@@ -52,18 +52,19 @@ $fila = $controller->gerenciarFila();
                     <tbody>
                         <?php foreach ($fila as $senha): ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($senha['id_senha']); ?></td>
-                                <td><?php echo isset($senha['id_utilizador']) ? htmlspecialchars($senha['id_utilizador']) : 'N/A'; ?></td>
-                                <td><?php echo htmlspecialchars($senha['data_hora_criacao']); ?></td>
+                                <td><?= htmlspecialchars($senha['id_senha']); ?></td>
+                                <td><?= htmlspecialchars($senha['nome_cliente']); ?></td>
+                                <td><?= htmlspecialchars($senha['data_hora_criacao']); ?></td>
                                 <td>
                                     <form method="post" style="display: inline;">
-                                        <input type="hidden" name="id_senha" value="<?php echo $senha['id_senha']; ?>">
+                                        <input type="hidden" name="id_senha" value="<?= htmlspecialchars($senha['id_senha']); ?>">
                                         <button type="submit" name="concluir" class="btn-concluir">Concluir</button>
                                     </form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
+
                 </table>
             <?php else: ?>
                 <p>Não há clientes na fila no momento.</p>
@@ -78,79 +79,9 @@ $fila = $controller->gerenciarFila();
 
             <!-- Mensagem de Feedback -->
             <?php if (isset($_SESSION['mensagem'])): ?>
-                <p class="mensagem"><?php echo htmlspecialchars($_SESSION['mensagem']); unset($_SESSION['mensagem']); ?></p>
+                <p class="mensagem"><?= htmlspecialchars($_SESSION['mensagem']); unset($_SESSION['mensagem']); ?></p>
             <?php endif; ?>
         </section>
     </main>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-            color: #333;
-        }
-        header {
-            background: #007bff;
-            color: #fff;
-            padding: 1em 2em;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .btn-voltar {
-            color: #fff;
-            text-decoration: none;
-            font-weight: bold;
-            background: #0056b3;
-            padding: 0.5em 1em;
-            border-radius: 5px;
-        }
-        h1, h2 {
-            margin: 0;
-        }
-        main {
-            padding: 2em;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 2em;
-        }
-        table th, table td {
-            padding: 0.5em;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-        table th {
-            background: #007bff;
-            color: #fff;
-        }
-        .no-data {
-            color: #555;
-            font-style: italic;
-        }
-        .btn-chamar {
-            display: inline-block;
-            padding: 0.5em 1.5em;
-            font-size: 1em;
-            color: #fff;
-            background: #007bff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-        .btn-chamar:hover {
-            background: #0056b3;
-        }
-        .mensagem {
-            margin-top: 1em;
-            color: green;
-            font-weight: bold;
-        }
-    </style>
 </body>
 </html>
