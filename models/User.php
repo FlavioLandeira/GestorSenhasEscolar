@@ -42,13 +42,13 @@ class User {
         return false;
     }
 
-    public function listarUsuarios() {
+    public function listarUtilizadores() {
         $stmt = $this->conn->prepare("SELECT * FROM sistema_senhas.utilizadores");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function adicionarUsuario($nome, $email, $senha, $tipoUtilizador, $idLocal = null) {
+    public function adicionarUtilizadores($nome, $email, $senha, $tipoUtilizador, $idLocal = null) {
         $stmt = $this->conn->prepare("
             INSERT INTO sistema_senhas.utilizadores (nome, email, senha, tipo_utilizador, id_local) 
             VALUES (:nome, :email, :senha, :tipo_utilizador, :id_local)
@@ -62,12 +62,12 @@ class User {
         ]);
     }    
 
-    public function removerUsuario($idUtilizador) {
+    public function removerUtilizadores($idUtilizador) {
         $stmt = $this->conn->prepare("DELETE FROM sistema_senhas.utilizadores WHERE id_utilizador = :id");
         return $stmt->execute([':id' => $idUtilizador]);
     }
 
-    public function atualizarUsuario($idUtilizador, $nome, $email, $senha, $tipoUtilizador, $idLocal = null) {
+    public function atualizarUtilizadores($idUtilizador, $nome, $email, $senha, $tipoUtilizador, $idLocal = null) {
         $query = "
             UPDATE sistema_senhas.utilizadores 
             SET nome = :nome, email = :email, senha = :senha, tipo_utilizador = :tipo_utilizador, id_local = :id_local 

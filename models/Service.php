@@ -75,6 +75,16 @@ class Service {
             return [];
         }
     }
+    public function getServicos() {
+        try {
+            $stmt = $this->conn->prepare("SELECT id_servico, nome_servico FROM servicos"); // Consulta para pegar os serviços
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC); // Retorna os serviços como um array associativo
+        } catch (PDOException $e) {
+            error_log("Erro ao obter serviços: " . $e->getMessage());
+            return [];
+        }
+    }
 
 }
 ?>

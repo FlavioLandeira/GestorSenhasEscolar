@@ -25,11 +25,33 @@ $servicos = $serviceModel->listarServicos();
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerenciar Serviços</title>
+    <link rel="stylesheet" href="admin.css">
 </head>
 <body>
     <h1>Gerenciar Serviços</h1>
+    
+    <h2>Lista de Serviços</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Preço</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($servicos as $servico): ?>
+                <tr>
+                    <td><?= $servico['id_servico']; ?></td>
+                    <td><?= $servico['nome_servico']; ?></td>
+                    <td><?= $servico['preco']; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
     
     <h2>Adicionar Serviço</h2>
     <form method="POST">
@@ -44,13 +66,6 @@ $servicos = $serviceModel->listarServicos();
         ID Serviço: <input type="text" name="id_servico" required>
         <button type="submit" name="remover">Remover</button>
     </form>
-
-    <h2>Lista de Serviços</h2>
-    <ul>
-        <?php foreach ($servicos as $servico): ?>
-            <li>ID: <?= $servico['id_servico']; ?> | Nome: <?= $servico['nome_servico']; ?> | Preço: <?= $servico['preco']; ?></li>
-        <?php endforeach; ?>
-    </ul>
 
     <h2>Atualizar Serviço</h2>
         <form method="POST">

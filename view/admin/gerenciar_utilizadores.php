@@ -20,19 +20,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-$utilizadores = $userModel->listarUsuarios();
+$utilizadores = $userModel->listarUtilizadores();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Gerenciar Usuários</title>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Utilizadores</title>
+    <link rel="stylesheet" href="admin.css">
 </head>
 <body>
-    <h1>Gerenciar Usuários</h1>
+    <h1>Gerenciar Utilizadores</h1>
+
+    <h2>Lista de Utilizadores</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Tipo</th>
+                <th>Local</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($utilizadores as $utilizador): ?>
+                <tr>
+                    <td><?= $utilizador['id_utilizador']; ?></td>
+                    <td><?= $utilizador['nome']; ?></td>
+                    <td><?= $utilizador['email']; ?></td>
+                    <td><?= $utilizador['tipo_utilizador']; ?></td>
+                    <td><?= $utilizador['id_local']; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
     
-    <h2>Adicionar Usuário</h2>
+    <h2>Adicionar Utilizadores</h2>
     <form method="POST">
         Nome: <input type="text" name="nome" required>
         Email: <input type="email" name="email" required>
@@ -47,25 +73,13 @@ $utilizadores = $userModel->listarUsuarios();
         <button type="submit" name="adicionar">Adicionar</button>
     </form>
 
-    <h2>Remover Usuário</h2>
+    <h2>Remover Utilizadores</h2>
     <form method="POST">
         ID Utilizador: <input type="text" name="id_utilizador" required>
         <button type="submit" name="remover">Remover</button>
     </form>
 
-    <h2>Lista de Usuários</h2>
-    <ul>
-        <?php foreach ($utilizadores as $utilizador): ?>
-            <li>
-                ID: <?= $utilizador['id_utilizador']; ?> | 
-                Nome: <?= $utilizador['nome']; ?> | 
-                Email: <?= $utilizador['email']; ?> | 
-                Tipo: <?= $utilizador['tipo_utilizador']; ?> | 
-                Local: <?= $utilizador['id_local']; ?>
-            </li>
-        <?php endforeach; ?>
-    </ul>
-    <h2>Atualizar Usuário</h2>
+    <h2>Atualizar Utilizadores</h2>
     <form method="POST">
         ID Utilizador: <input type="text" name="id_utilizador" required>
         Nome: <input type="text" name="nome" required>

@@ -10,8 +10,9 @@ if ($_SESSION['user']['tipo_utilizador'] !== 'administrador') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel do Administrador</title>
-    <link rel="stylesheet" href="../../assets/style.css">
+    <link rel="stylesheet" href="admin.css">
 </head>
 <body>
     <h1>Painel de Administração</h1>

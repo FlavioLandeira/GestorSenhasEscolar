@@ -69,7 +69,6 @@ class Local {
         ]);
     }
     
-
     // Função para remover um local
     public function removerLocal($idLocal) {
         $query = "DELETE FROM locais WHERE id_local = :id_local";
@@ -77,4 +76,36 @@ class Local {
         $stmt->bindParam(':id_local', $idLocal);
         return $stmt->execute();
     }
+
+    public function getLocais() {
+        try {
+            $stmt = $this->conn->prepare("SELECT id_local, nome_local FROM locais"); // Consulta para pegar os locais
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC); // Retorna os locais como um array associativo
+        } catch (PDOException $e) {
+            error_log("Erro ao obter locais: " . $e->getMessage());
+            return [];
+        }
+    }
+    public function obterIdPorNome($nomeLocal) {
+        // Supondo que haja um método para buscar pelo nome
+        $stmt = $this->conn->prepare("SELECT id_local FROM locais WHERE nome_local = ?");
+        $stmt->execute([$nomeLocal]);
+        $result = $stmt->fetch();
+        return $result['id_local'] ?? null;
+    }
+    // No modelo Local.php
+
+    public function obterLocalPorId($id_local) {
+        // Prepara a consulta para obter o local pelo ID
+        $stmt = $this->conn->prepare("SELECT * FROM locais WHERE id_local = ?");
+        
+        // Executa a consulta passando o ID do local
+        $stmt->execute([$id_local]);
+        
+        // Retorna o resultado (um único local) ou false se não encontrado
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    
 }

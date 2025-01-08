@@ -1,0 +1,109 @@
+/* Estilos gerais para o corpo da página */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #545454;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+/* Contêiner de formulário */
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Estilos para o título */
+h1 {
+    font-family: 'Roboto', sans-serif; /* Fonte personalizada, você pode usar qualquer fonte que preferir */
+    font-size: 40px; /* Tamanho grande para o título */
+    color: #ffa500; /* Cor laranja */
+    text-align: center; /* Alinhamento central */
+    text-transform: uppercase; /* Letras maiúsculas */
+    letter-spacing: 5px; /* Espaçamento entre as letras */
+    animation: shine 1.5s infinite alternate; /* Animação de brilho */
+}
+
+/* Definindo a animação do brilho */
+@keyframes shine {
+    0% {
+        text-shadow: 0 0 5px #ffa500, 0 0 10px #ffa500, 0 0 15px #ffa500;
+    }
+    50% {
+        text-shadow: 0 0 20px #ff8000, 0 0 30px #ff8000, 0 0 40px #ff8000;
+    }
+    100% {
+        text-shadow: 0 0 5px #ffa500, 0 0 10px #ffa500, 0 0 15px #ffa500;
+    }
+}
+
+/* Se você deseja adicionar uma fonte personalizada, pode usar Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+
+
+/* Logo */
+.logo {
+    width: 300px;
+    margin-left: 60px;/* Move o logo para a esquerda */
+}
+
+
+/* Campos de entrada (input e textarea) */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+/* Efeito de foco nos campos de entrada */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #ffa500;
+    background-color: #fff;
+    outline: none;
+}
+
+/* Botão de envio */
+button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #ffa500;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Efeito de hover no botão */
+button[type="submit"]:hover {
+    background-color: #ff8000;
+}
+
+/* Link para o cadastro na página de login */
+a {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
