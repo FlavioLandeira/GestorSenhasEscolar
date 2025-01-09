@@ -200,12 +200,47 @@ class Senha {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     // Função para verificar se há senhas pendentes antes de chamar a próxima
-    public function verificarSenhasPendentes($idLocal) {
-        $query = "SELECT COUNT(*) AS total FROM senhas WHERE id_local = :id_local AND status = 'em_espera'";
+    public function listarSenhasEmEsperaUsuario($idUsuario) {
+        $query = "
+            SELECT s.id_senha, serv.nome_servico, s.status, s.data_hora_criacao
+            FROM senhas AS s
+            INNER JOIN servicos AS serv ON s.id_servico = serv.id_servico
+            WHERE s.id_utilizador = :id_utilizador AND s.status = 'em_espera'
+            ORDER BY s.data_hora_criacao ASC
+        ";
+    
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':id_local', $idLocal);
+        $stmt->bindParam(':id_utilizador', $idUsuario, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }    
+
+    public function contarPessoasNaFrente($idUsuario) {
+        $query = "
+            SELECT COUNT(*) AS pessoas_na_frente
+            FROM senhas AS s
+            WHERE s.id_local = (
+                SELECT id_local 
+                FROM senhas
+                WHERE id_utilizador = :id_utilizador AND status = 'em_espera'
+                LIMIT 1
+            )
+            AND s.status = 'em_espera'
+            AND s.data_hora_criacao < (
+                SELECT data_hora_criacao 
+                FROM senhas 
+                WHERE id_utilizador = :id_utilizador AND status = 'em_espera'
+                LIMIT 1
+            )
+        ";
+    
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id_utilizador', $idUsuario, PDO::PARAM_INT);
+        $stmt->execute();
+    
+        return $stmt->fetch(PDO::FETCH_ASSOC)['pessoas_na_frente'];
     }
+    
 }
 ?>

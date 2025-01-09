@@ -2,15 +2,15 @@
 require_once "../models/User.php";
 require_once __DIR__ . '/../config/database.php';
 
-session_start();
+session_start(); // Chamada única no início do script
 
 class AuthController {
     public $userModel;
 
     public function __construct() {
-
         $this->userModel = new User();
     }
+
     public function register() {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $nome = $_POST['nome'];
@@ -28,13 +28,15 @@ class AuthController {
 
     public function login() {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
             $email = $_POST['email'];
             $senha = $_POST['senha'];
-    
+
             $user = $this->userModel->login($email, $senha);
             if ($user) {
+                // Armazena o novo usuário na sessão
                 $_SESSION['user'] = $user;
-    
+
                 // Redireciona conforme o tipo de utilizador
                 switch ($user['tipo_utilizador']) {
                     case 'administrador':
@@ -55,8 +57,7 @@ class AuthController {
                 echo "Email ou senha inválidos.";
             }
         }
-    }
-    
+    }    
 }
 
 $authController = new AuthController();

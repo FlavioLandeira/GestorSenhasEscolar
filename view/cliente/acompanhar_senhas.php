@@ -1,4 +1,3 @@
-<!-- acompanhar_senhas.php -->
 <?php
 session_start();
 
@@ -11,7 +10,12 @@ if (!isset($_SESSION['user'])) {
 require_once "../../models/Senha.php";
 
 $senhaModel = new Senha();
-$senhas = $senhaModel->historicoSenhas($_SESSION['user']['id_utilizador']);
+
+// Obtém apenas as senhas com status "em_espera" para o usuário logado
+$senhasEmEspera = $senhaModel->listarSenhasEmEsperaUsuario($_SESSION['user']['id_utilizador']); 
+
+// Conta o número de pessoas à frente na fila
+$pessoasNaFrente = $senhaModel->contarPessoasNaFrente($_SESSION['user']['id_utilizador']);
 ?>
 
 <!DOCTYPE html>
@@ -22,11 +26,12 @@ $senhas = $senhaModel->historicoSenhas($_SESSION['user']['id_utilizador']);
     <title>Acompanhar Senhas</title>
 </head>
 <body>
-    <h1>Acompanhar Senhas</h1>
+    <h1>Senhas em Espera</h1>
 
-    <?php if (empty($senhas)): ?>
-        <p>Você ainda não retirou nenhuma senha.</p>
+    <?php if (empty($senhasEmEspera)): ?>
+        <p>Você não possui senhas em espera no momento.</p>
     <?php else: ?>
+        <p>Pessoas à frente na fila: <strong><?php echo htmlspecialchars($pessoasNaFrente); ?></strong></p>
         <table border="1">
             <thead>
                 <tr>
@@ -34,17 +39,15 @@ $senhas = $senhaModel->historicoSenhas($_SESSION['user']['id_utilizador']);
                     <th>Serviço</th>
                     <th>Status</th>
                     <th>Data de Criação</th>
-                    <th>Data de Atendimento</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($senhas as $senha): ?>
+                <?php foreach ($senhasEmEspera as $senha): ?>
                     <tr>
                         <td><?php echo htmlspecialchars($senha['id_senha']); ?></td>
                         <td><?php echo htmlspecialchars($senha['nome_servico']); ?></td>
                         <td><?php echo htmlspecialchars($senha['status']); ?></td>
                         <td><?php echo htmlspecialchars($senha['data_hora_criacao']); ?></td>
-                        <td><?php echo htmlspecialchars($senha['data_hora_atendimento'] ?? 'N/A'); ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

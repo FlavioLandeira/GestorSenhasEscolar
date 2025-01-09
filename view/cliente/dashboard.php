@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 if ($_SESSION['user']['tipo_utilizador'] !== 'cliente') {
     header("Location: ../login.php");
     exit;
@@ -19,7 +20,7 @@ if ($_SESSION['user']['tipo_utilizador'] !== 'cliente') {
             <li><a href="retirar_senha.php">Retirar Senha</a></li>
             <li><a href="acompanhar_senhas.php">Acompanhar Senhas</a></li>
             <li><a href="historico.php">Historico</a></li>
-            <li><a href="../../logout.php">Sair</a></li>
+            <li><a href="../../view/logout.php">Sair</a></li>
         </ul>
     </nav>
 </body>
