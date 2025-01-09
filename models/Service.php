@@ -85,6 +85,17 @@ class Service {
             return [];
         }
     }
+    public function obterServicoPorId($id_servico) {
+        // Preparar a consulta SQL para buscar um serviço com base no id_servico
+        $stmt = $this->conn->prepare("SELECT * FROM servicos WHERE id_servico = :id_servico");
+        $stmt->bindParam(':id_servico', $id_servico, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        // Verificar se o serviço foi encontrado
+        $servico = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        return $servico;
+    }
 
 }
 ?>

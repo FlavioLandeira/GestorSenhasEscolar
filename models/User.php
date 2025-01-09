@@ -68,21 +68,31 @@ class User {
     }
 
     public function atualizarUtilizadores($idUtilizador, $nome, $email, $senha, $tipoUtilizador, $idLocal = null) {
+        // Se id_local for uma string vazia, definimos como NULL
+        if ($idLocal === '') {
+            $idLocal = null;
+        }
+    
         $query = "
             UPDATE sistema_senhas.utilizadores 
             SET nome = :nome, email = :email, senha = :senha, tipo_utilizador = :tipo_utilizador, id_local = :id_local 
             WHERE id_utilizador = :id_utilizador
         ";
+    
+        // Preparando a consulta
         $stmt = $this->conn->prepare($query);
+    
+        // Executar a consulta com os parâmetros
         return $stmt->execute([
             ':id_utilizador' => $idUtilizador,
             ':nome' => $nome,
             ':email' => $email,
             ':senha' => password_hash($senha, PASSWORD_DEFAULT), // Hashing for security
             ':tipo_utilizador' => $tipoUtilizador,
-            ':id_local' => $idLocal
+            ':id_local' => $idLocal // Pode ser null ou um valor válido
         ]);
     }
+    
     public function obterLocais() {
         try {
             $stmt = $this->conn->prepare("SELECT * FROM locais");
@@ -172,5 +182,21 @@ class User {
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC)['id_local'] ?? null;
     }
+    public function listarLocais() {
+        $db = new PDO('mysql:host=localhost;dbname=nome_do_banco', 'usuario', 'senha');
+        $sql = "SELECT id_local, nome_local FROM locais"; // Supondo que a tabela se chama 'locais'
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function obterUtilizadorPorId($id_utilizador) {
+        $query = "SELECT * FROM utilizadores WHERE id_utilizador = :id_utilizador";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id_utilizador', $id_utilizador, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
+    
 }
 ?>

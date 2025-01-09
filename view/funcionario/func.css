@@ -29,10 +29,26 @@ header {
     margin-bottom: 30px;
 }
 
-/* Estilos gerais de links e botões */
 a {
     text-decoration: none;
+    color: #000000; /* Amarelo vibrante */
+    font-weight: bold;
+    margin-top: 20px;
+    padding: 12px 24px; /* Aumenta o padding para um toque mais moderno */
+    border-radius: 8px; /* Bordas arredondadas */
+    background: linear-gradient(135deg, #ffb400, #ffa500); /* Gradiente de amarelo para laranja */
+    display: inline-block;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Adiciona uma sombra suave */
+    transition: all 0.3s ease; /* Transição suave para hover */
 }
+
+a:hover {
+    background: linear-gradient(135deg, #ffa500, #ffb400); /* Inverte o gradiente no hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); /* Sombra mais intensa */
+    transform: scale(1.05); /* Leve aumento de escala ao passar o mouse */
+    color: #3a3a3a; /* Texto escuro para contraste */
+}
+
 
 a.btn-voltar {
     display: inline-block;

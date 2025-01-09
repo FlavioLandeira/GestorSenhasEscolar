@@ -90,6 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <button type="submit">Retirar Senha</button>
     </form>
-    <a href="acompanhar_senhas.php">Acompanhar Senhas</a>
+    <a href="acompanhar_senhas.php">Acompanhar Senhas</a>~
+    <a href="dashboard.php">Voltar</a>
 </body>
 </html>

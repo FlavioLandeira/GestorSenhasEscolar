@@ -56,5 +56,6 @@ $pessoasNaFrente = $senhaModel->contarPessoasNaFrente($_SESSION['user']['id_util
     <?php endif; ?>
 
     <a href="retirar_senha.php">Retirar outra Senha</a>
+    <a href="dashboard.php">Voltar</a>
 </body>
 </html>

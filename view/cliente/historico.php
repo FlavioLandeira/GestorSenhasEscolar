@@ -55,5 +55,6 @@ $historicoSenhas = $senhaModel->historicoSenhas($_SESSION['user']['id_utilizador
     <?php endif; ?>
 
     <a href="retirar_senha.php">Retirar outra Senha</a>
+    <a href="dashboard.php">Voltar</a>
 </body>
 </html>

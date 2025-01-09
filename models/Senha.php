@@ -310,6 +310,29 @@ class Senha {
     
         return $stmt->fetch(PDO::FETCH_ASSOC)['pessoas_na_frente'];
     }
+    public function obterSenhaPorId($id_senha) {
+
+        // Consulta SQL para buscar a senha por ID
+        $sql = "SELECT s.id_senha, u.nome AS nome_utilizador, l.nome_local, se.nome_servico, 
+                       s.status, s.data_hora_criacao, s.data_hora_atendimento
+                FROM senhas s
+                JOIN utilizadores u ON s.id_utilizador = u.id_utilizador
+                JOIN locais l ON s.id_local = l.id_local
+                JOIN servicos se ON s.id_servico = se.id_servico
+                WHERE s.id_senha = :id_senha";
+
+        // Preparar a consulta
+        $stmt = $this->conn->prepare($sql);
+
+        // Vincular o parâmetro :id_senha
+        $stmt->bindParam(':id_senha', $id_senha, PDO::PARAM_INT);
+
+        // Executar a consulta
+        $stmt->execute();
+
+        // Buscar o resultado e retornar como array associativo
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
     
 }
 ?>

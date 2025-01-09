@@ -28,7 +28,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     exit;
 }
 
-
 $senhas = $senhaModel->listarSenhas();
 
 // Obter utilizadores, locais e serviços usando os modelos ou controllers
@@ -39,6 +38,12 @@ $servicosModel = new Service();
 $utilizadores = $utilizadorModel->listarUtilizadores();
 $locais = $locaisModel->listarLocais();
 $servicos = $servicosModel->listarServicos();
+
+// Para carregar os dados de uma senha selecionada para editar
+$senhaParaAtualizar = null;
+if (isset($_GET['id_senha'])) {
+    $senhaParaAtualizar = $senhaModel->obterSenhaPorId($_GET['id_senha']);
+}
 ?>
 
 <!DOCTYPE html>
@@ -78,16 +83,16 @@ $servicos = $servicosModel->listarServicos();
                 <td><?= $senha['data_hora_atendimento'] ?? 'N/A'; ?></td>
                 <td>
                     <!-- Formulário de remoção -->
-                    <form method="POST" >
+                    <form method="POST">
                         <input type="hidden" name="id_senha" value="<?= $senha['id_senha']; ?>">
                         <button type="submit" name="remover" onclick="return confirm('Tem certeza que deseja remover esta senha?');">Remover</button>
                     </form>
+                    <a href="?id_senha=<?= $senha['id_senha']; ?>">Editar</a> <!-- Link para editar -->
                 </td>
             </tr>
-            <?php endforeach; ?>
-        </tbody>
+        <?php endforeach; ?>
+    </tbody>
     </table>
-
 
     <h2>Adicionar Senha</h2>
     <form method="POST">
@@ -151,19 +156,22 @@ $servicos = $servicosModel->listarServicos();
     </script>
 
     <h2>Atualizar Senha</h2>
-    <form method="POST">
-        ID Senha: <input type="text" name="id_senha" required>
-        Status: 
-        <select name="status" required>
-            <option value="em_espera">Em Espera</option>
-            <option value="em_atendimento">Em Atendimento</option>
-            <option value="concluido">Concluído</option>
-        </select>
-        Data/Hora Atendimento: <input type="datetime-local" name="data_hora_atendimento">
-        <button type="submit" name="atualizar">Atualizar</button>
-    </form>
+    <?php if ($senhaParaAtualizar): ?>
+        <form method="POST">
+            <input type="hidden" name="id_senha" value="<?= $senhaParaAtualizar['id_senha']; ?>">
+            Status: 
+            <select name="status" required>
+                <option value="em_espera" <?= $senhaParaAtualizar['status'] === 'em_espera' ? 'selected' : ''; ?>>Em Espera</option>
+                <option value="em_atendimento" <?= $senhaParaAtualizar['status'] === 'em_atendimento' ? 'selected' : ''; ?>>Em Atendimento</option>
+                <option value="concluido" <?= $senhaParaAtualizar['status'] === 'concluido' ? 'selected' : ''; ?>>Concluído</option>
+            </select>
+            Data/Hora Atendimento: <input type="datetime-local" name="data_hora_atendimento" value="<?= $senhaParaAtualizar['data_hora_atendimento']; ?>">
+            <button type="submit" name="atualizar">Atualizar</button>
+        </form>
+    <?php else: ?>
+        <p>Selecione uma senha para editar.</p>
+    <?php endif; ?>
 
     <a href="dashboard.php">Voltar</a>
 </body>
 </html>
-

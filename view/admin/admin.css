@@ -69,21 +69,14 @@ form input, form select, form button, form textarea {
     transition: background 0.3s, border 0.3s;
 }
 
+
 form input:focus, form select:focus {
     border-color: #ffa500; /* Laranja */
     outline: none;
     background: #444444;
 }
 
-form button {
-    background-color: #ffa500; /* Laranja */
-    color: #2c2c2c; /* Fundo escuro */
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    text-transform: uppercase;
-    transition: background 0.3s ease, transform 0.3s ease;
-}
+
 
 form button:hover {
     background-color: #ffb400; /* Amarelo */
