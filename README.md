@@ -2,7 +2,7 @@
 Bem-vindo ao **SenhaSmart**, um sistema inovador desenvolvido para facilitar a organização e gestão de filas em uma escola. Este projeto visa melhorar a experiência de atendimento, otimizando filas e reduzindo o tempo de espera.
 
 ##  Link Alojamento Online
-link : http://gestordesenhas.great-site.net/
+http://gestordesenhas.great-site.net/
 ---
 
 ## 📚 Sobre o Projeto
