@@ -24,6 +24,7 @@ $pessoasNaFrente = $senhaModel->contarPessoasNaFrente($_SESSION['user']['id_util
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acompanhar Senhas</title>
+    <link rel="stylesheet" href="cliente.css">
 </head>
 <body>
     <h1>Senhas em Espera</h1>

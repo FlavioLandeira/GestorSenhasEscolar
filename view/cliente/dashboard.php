@@ -12,6 +12,7 @@ if ($_SESSION['user']['tipo_utilizador'] !== 'cliente') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cliente - Página Inicial</title>
+    <link rel="stylesheet" href="cliente.css">
 </head>
 <body>
     <h1>Bem-vindo(a), <?= $_SESSION['user']['nome'] ?></h1>

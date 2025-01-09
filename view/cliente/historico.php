@@ -22,6 +22,7 @@ $historicoSenhas = $senhaModel->historicoSenhas($_SESSION['user']['id_utilizador
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Histórico de Senhas</title>
+    <link rel="stylesheet" href="cliente.css">
 </head>
 <body>
     <h1>Histórico de Senhas</h1>
