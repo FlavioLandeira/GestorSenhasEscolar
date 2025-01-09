@@ -35,6 +35,7 @@ $historicoSenhas = $funcionarioModel->obterSenhasAtendidasPorLocal($idLocal);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Histórico de Senhas</title>
+    <link rel="stylesheet" href="func.css">
     <script>
         // Redireciona para atualizar o histórico com base no local selecionado
         function atualizarHistorico() {
