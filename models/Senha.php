@@ -167,6 +167,75 @@ class Senha {
     
         return $relatorios;
     }
+    public function gerarRelatoriosPorLocal($id_local) {
+        $relatorios = [];
+    
+        // Número total de senhas retiradas por local e serviço
+        $query1 = "
+            SELECT l.nome_local, se.nome_servico, COUNT(s.id_senha) AS total_senhas
+            FROM sistema_senhas.senhas s
+            JOIN sistema_senhas.locais l ON s.id_local = l.id_local
+            JOIN sistema_senhas.servicos se ON s.id_servico = se.id_servico
+            WHERE s.id_local = :id_local
+            GROUP BY l.nome_local, se.nome_servico
+        ";
+        $stmt1 = $this->conn->prepare($query1);
+        $stmt1->bindParam(':id_local', $id_local, PDO::PARAM_INT);
+        $stmt1->execute();
+        $relatorios['total_senhas'] = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+    
+        // Tempo médio de espera (em minutos) por local e serviço
+        $query2 = "
+            SELECT l.nome_local, se.nome_servico, 
+                   AVG(TIMESTAMPDIFF(MINUTE, s.data_hora_criacao, s.data_hora_atendimento)) AS tempo_medio_espera
+            FROM sistema_senhas.senhas s
+            JOIN sistema_senhas.locais l ON s.id_local = l.id_local
+            JOIN sistema_senhas.servicos se ON s.id_servico = se.id_servico
+            WHERE s.id_local = :id_local
+            AND s.data_hora_atendimento IS NOT NULL
+            GROUP BY l.nome_local, se.nome_servico
+        ";
+        $stmt2 = $this->conn->prepare($query2);
+        $stmt2->bindParam(':id_local', $id_local, PDO::PARAM_INT);
+        $stmt2->execute();
+        $relatorios['tempo_medio_espera'] = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+    
+        // Tempo médio de atendimento (em minutos) por local e serviço
+        $query3 = "
+            SELECT l.nome_local, se.nome_servico, 
+                   AVG(TIMESTAMPDIFF(MINUTE, s.data_hora_atendimento, NOW())) AS tempo_medio_atendimento
+            FROM sistema_senhas.senhas s
+            JOIN sistema_senhas.locais l ON s.id_local = l.id_local
+            JOIN sistema_senhas.servicos se ON s.id_servico = se.id_servico
+            WHERE s.id_local = :id_local
+            AND s.status = 'concluido'
+            GROUP BY l.nome_local, se.nome_servico
+        ";
+        $stmt3 = $this->conn->prepare($query3);
+        $stmt3->bindParam(':id_local', $id_local, PDO::PARAM_INT);
+        $stmt3->execute();
+        $relatorios['tempo_medio_atendimento'] = $stmt3->fetchAll(PDO::FETCH_ASSOC);
+    
+        // Status atual das filas
+        $query4 = "
+            SELECT l.nome_local, se.nome_servico,
+                   SUM(CASE WHEN s.status = 'em_espera' THEN 1 ELSE 0 END) AS em_espera,
+                   SUM(CASE WHEN s.status = 'em_atendimento' THEN 1 ELSE 0 END) AS em_atendimento,
+                   SUM(CASE WHEN s.status = 'concluido' THEN 1 ELSE 0 END) AS concluido
+            FROM sistema_senhas.senhas s
+            JOIN sistema_senhas.locais l ON s.id_local = l.id_local
+            JOIN sistema_senhas.servicos se ON s.id_servico = se.id_servico
+            WHERE s.id_local = :id_local
+            GROUP BY l.nome_local, se.nome_servico
+        ";
+        $stmt4 = $this->conn->prepare($query4);
+        $stmt4->bindParam(':id_local', $id_local, PDO::PARAM_INT);
+        $stmt4->execute();
+        $relatorios['status_filas'] = $stmt4->fetchAll(PDO::FETCH_ASSOC);
+    
+        return $relatorios;
+    }
+    
 
     //Funcionários functions
 

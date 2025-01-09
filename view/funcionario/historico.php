@@ -77,6 +77,6 @@ $historicoSenhas = $funcionarioModel->obterSenhasAtendidasPorLocal($idLocal);
         </table>
     <?php endif; ?>
 
-    <a href="retirar_senha.php">Retirar outra Senha</a>
+    <a href="dashboard.php">Voltar ao painel</a>
 </body>
 </html>
