@@ -162,10 +162,6 @@ ul li p {
     text-align: center;
 }
 
-.logout:hover {
-    background-color: #c0392b;
-}
-
 /* Estilos de rodapé */
 footer {
     margin-top: 40px;
