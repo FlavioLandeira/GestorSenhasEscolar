@@ -23,8 +23,8 @@ h1 {
 }
 
 h2 {
-    text-align: center;
-    margin: 0 auto 20px;
+    text-align: center; /* Alinha o texto ao centro */
+    margin: 0 auto 20px; /* Garante centralização horizontal */
     color: #ffa500; /* Laranja */
     text-transform: uppercase;
     font-size: 1.5em;
@@ -38,7 +38,7 @@ h2 {
 
 h2:hover {
     transform: scale(1.1);
-    color: #ffb400;
+    color: #ffb400; /* Amarelo vibrante */
 }
 
 form {
@@ -57,27 +57,27 @@ form:hover {
 
 form input, form select, form button, form textarea {
     display: block;
-    width: 90%;
-    max-width: 500px;
+    width: 90%; /* Ajuste para inputs menos esticados */
+    max-width: 500px; /* Limite de largura */
     margin: 10px auto;
     padding: 12px;
     font-size: 1em;
-    border: 2px solid #ffb400;
+    border: 2px solid #ffb400; /* Amarelo */
     border-radius: 8px;
-    background: #2c2c2c;
-    color: #f4f4f4;
+    background: #2c2c2c; /* Fundo escuro */
+    color: #f4f4f4; /* Texto claro */
     transition: background 0.3s, border 0.3s;
 }
 
 form input:focus, form select:focus {
-    border-color: #ffa500;
+    border-color: #ffa500; /* Laranja */
     outline: none;
     background: #444444;
 }
 
 form button {
-    background-color: #ffa500;
-    color: #2c2c2c;
+    background-color: #ffa500; /* Laranja */
+    color: #2c2c2c; /* Fundo escuro */
     border: none;
     cursor: pointer;
     font-weight: bold;
@@ -86,8 +86,37 @@ form button {
 }
 
 form button:hover {
-    background-color: #ffb400;
+    background-color: #ffb400; /* Amarelo */
     transform: scale(1.05);
+}
+
+/* Estilos gerais para o botão "Remover" */
+button[type="submit"] {
+    background-color: #e74c3c; /* Cor de fundo vermelha */
+    color: white; /* Texto branco */
+    border: none; /* Remover borda */
+    padding: 8px 16px; /* Espaciamento interno */
+    cursor: pointer; /* Cursor de pointer para indicar que é clicável */
+    font-size: 10px; /* Tamanho da fonte */
+    border-radius: 4px; /* Bordas arredondadas */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transições para efeito de hover */
+}
+
+/* Efeito de hover */
+button[type="submit"]:hover {
+    background-color: #c0392b; /* Cor de fundo mais escura ao passar o mouse */
+    transform: scale(1.05); /* Aumenta ligeiramente o tamanho do botão */
+}
+
+/* Efeito de foco (quando o botão é clicado) */
+button[type="submit"]:focus {
+    outline: none; /* Remover contorno */
+    box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.5); /* Sombra de foco */
+}
+
+p {
+    text-align: center; /* Alinha o texto no centro */
+    margin-top: 20px;   /* Ajuste opcional para adicionar espaço acima */
 }
 
 ul {
@@ -96,7 +125,7 @@ ul {
 }
 
 ul li {
-    background: #3a3a3a;
+    background: #3a3a3a; /* Cinza médio */
     margin: 10px 0;
     padding: 15px;
     border-radius: 12px;
@@ -111,7 +140,7 @@ ul li:hover {
 
 ul li span {
     font-weight: bold;
-    color: #ffa500;
+    color: #ffa500; /* Laranja */
 }
 
 a {
@@ -119,7 +148,7 @@ a {
     text-align: center;
     margin-top: 20px;
     text-decoration: none;
-    color: #ffb400;
+    color: #ffb400; /* Amarelo */
     font-size: 1.2em;
     font-weight: bold;
     text-transform: uppercase;
@@ -127,44 +156,32 @@ a {
 }
 
 a:hover {
-    color: #ffa500;
+    color: #ffa500; /* Laranja */
     transform: scale(1.1);
 }
 
-table {
+/* Botões de ação animados */
+button[type="submit"] {
+    position: relative;
+    overflow: hidden;
+}
+
+button[type="submit"]::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: width 0.4s ease;
+}
+
+button[type="submit"]:hover::after {
     width: 100%;
-    max-width: 1200px;
-    margin: 20px auto;
-    border-collapse: collapse;
-    background-color: #3a3a3a;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-table th, table td {
-    padding: 12px 16px;
-    border: 1px solid #444;
-    color: #f4f4f4;
-    font-size: 0.95em;
-    text-align: center;
-}
-
-table th {
-    background-color: #ffa500;
-    color: #2c2c2c;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-table tr:nth-child(even) {
-    background-color: #333;
-}
-
-table tr:hover {
-    background-color: #444;
-    transition: background 0.3s ease;
-}
-
+/* Animação ao carregar o título */
 @keyframes slide-in {
     from {
         opacity: 0;
@@ -176,6 +193,7 @@ table tr:hover {
     }
 }
 
+/* Layout responsivo */
 @media (min-width: 768px) {
     form {
         max-width: 600px;
@@ -189,5 +207,92 @@ table tr:hover {
 
     h1 {
         font-size: 3em;
+    }
+}
+
+/* Ajuste de tamanho dos ícones */
+.icon {
+    width: 24px; /* Ajuste o tamanho desejado */
+    height: auto; /* Mantém a proporção do ícone */
+    max-width: 100%; /* Garante que o ícone não ultrapasse o tamanho do seu contêiner */
+}
+
+table {
+    width: 100%; /* A tabela ocupa toda a largura disponível */
+    max-width: 1200px; /* Limite de largura para telas grandes */
+    margin: 20px auto; /* Centraliza a tabela */
+    border-collapse: collapse; /* Remove o espaço entre as células */
+    background-color: #3a3a3a; /* Cor de fundo cinza escuro */
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave */
+}
+
+/* Estilo para as células da tabela (th e td) */
+table th, table td {
+    padding: 12px 16px; /* Maior espaçamento interno */
+    border: 1px solid #444; /* Borda discreta */
+    color: #f4f4f4; /* Texto claro */
+    font-size: 10px; /* Fonte levemente reduzida */
+    text-align: center; /* Alinhamento centralizado */
+}
+
+/* Estilo para os cabeçalhos da tabela */
+table th {
+    background-color: #ffa500; /* Fundo laranja para cabeçalhos */
+    color: #2c2c2c; /* Texto escuro */
+    font-weight: bold;
+    text-transform: uppercase; /* Letras maiúsculas */
+    letter-spacing: 1px; /* Espaçamento entre letras */
+}
+
+/* Estilo para as linhas alternadas */
+table tr:nth-child(even) {
+    background-color: #333; /* Linhas pares com fundo mais escuro */
+}
+
+/* Efeito de hover para as linhas da tabela */
+table tr:hover {
+    background-color: #444; /* Destaque ao passar o mouse */
+    transition: background 0.3s ease;
+}
+
+/* Estilo para o conteúdo das células (td) */
+table td {
+    font-size: 0.95em; /* Fonte mais compacta */
+    word-break: break-word; /* Quebra de palavras longas */
+}
+
+/* Estilo para o botão de remoção */
+form button {
+    background-color: #e74c3c; /* Vermelho */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 1em;
+    border-radius: 6px; /* Bordas arredondadas */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Efeito de hover no botão de remoção */
+form button:hover {
+    background-color: #c0392b; /* Cor de fundo mais escura */
+    transform: scale(1.05); /* Aumenta ligeiramente o botão */
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    table {
+        width: 100%; /* A tabela ocupa 100% da largura em telas pequenas */
+        padding: 10px; /* Espaçamento ajustado */
+    }
+
+    table th, table td {
+        font-size: 0.8em; /* Fonte reduzida em telas pequenas */
+        padding: 8px 12px;
+    }
+
+    h1 {
+        font-size: 2em; /* Tamanho do título reduzido */
     }
 }
