@@ -1,4 +1,3 @@
-/* Reset básico */
 body, h1, h2, ul, li, form {
     margin: 0;
     padding: 0;
@@ -43,7 +42,7 @@ h2:hover {
 
 form {
     background: #3a3a3a; /* Cinza médio */
-    padding: 20px;
+    padding: 5px;
     margin: 20px 0;
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -60,7 +59,7 @@ form input, form select, form button, form textarea {
     width: 90%; /* Ajuste para inputs menos esticados */
     max-width: 500px; /* Limite de largura */
     margin: 10px auto;
-    padding: 12px;
+    padding: 5px;
     font-size: 1em;
     border: 2px solid #ffb400; /* Amarelo */
     border-radius: 8px;
@@ -140,10 +139,10 @@ ul li span {
 a {
     display: block;
     text-align: center;
-    margin-top: 20px;
+    /* margin-top: 20px; */
     text-decoration: none;
-    color: #ffb400; /* Amarelo */
-    font-size: 1.2em;
+    color: #ffb400;
+    /* font-size: 1.2em; */
     font-weight: bold;
     text-transform: uppercase;
     transition: color 0.3s ease, transform 0.3s ease;

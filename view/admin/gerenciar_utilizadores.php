@@ -73,8 +73,8 @@ if (isset($_GET['id_utilizador'])) {
                         <form method="POST" onsubmit="return confirm('Tem certeza que deseja remover este utilizador?');">
                             <input type="hidden" name="id_utilizador" value="<?= $utilizador['id_utilizador']; ?>">
                             <button type="submit" name="remover">Remover</button>
+                            <a href="?id_utilizador=<?= $utilizador['id_utilizador']; ?>">Editar</a>
                         </form>
-                        <a href="?id_utilizador=<?= $utilizador['id_utilizador']; ?>">Editar</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

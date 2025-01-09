@@ -36,7 +36,7 @@ a {
     margin-top: 20px;
     padding: 12px 24px; /* Aumenta o padding para um toque mais moderno */
     border-radius: 8px; /* Bordas arredondadas */
-    background: linear-gradient(135deg, #ffb400, #ffa500); /* Gradiente de amarelo para laranja */
+    background: linear-gradient(135deg, #858585, #ffa500); /* Gradiente de amarelo para laranja */
     display: inline-block;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Adiciona uma sombra suave */
     transition: all 0.3s ease; /* Transição suave para hover */
@@ -55,7 +55,7 @@ a.btn-voltar {
     margin-top: 10px;
     padding: 10px 20px;
     background-color: #3a3a3a;
-    color: #ffb400;
+    color: #000000;
     text-decoration: none;
     font-weight: bold;
     border-radius: 6px;
