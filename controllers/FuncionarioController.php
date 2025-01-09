@@ -48,6 +48,7 @@ class FuncionarioController {
             $_SESSION['mensagem'] = "Erro ao chamar o próximo cliente.";
         }
     }
+    
 
     // Concluir atendimento
     public function concluirAtendimento($idSenha) {

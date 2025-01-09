@@ -163,5 +163,14 @@ class User {
             return null;
         }
     }
+    
+    public function obterIdLocalPorUtilizador($idUtilizador)
+    {
+        $sql = "SELECT id_local FROM utilizadores WHERE id_utilizador = :id_utilizador";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':id_utilizador', $idUtilizador, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC)['id_local'] ?? null;
+    }
 }
 ?>

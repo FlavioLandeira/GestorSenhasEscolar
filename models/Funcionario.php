@@ -66,17 +66,40 @@ class Funcionario {
     }    
 
     // Obter o histórico de atendimentos de um local
-    public function obterHistorico($idLocal) {
+    function obterSenhasAtendidasPorLocal($idLocal) {
         try {
-            $stmt = $this->conn->prepare("SELECT s.id_senha, u.nome AS cliente, s.status, s.data_hora_criacao, s.data_hora_atendimento FROM senhas s JOIN utilizadores u ON s.id_utilizador = u.id_utilizador WHERE s.id_local = :id_local AND s.status = 'concluido' ORDER BY s.data_hora_atendimento DESC");
-            $stmt->bindParam(':id_local', $idLocal, PDO::PARAM_INT);
+
+            // Consulta SQL
+            $sql = "
+            SELECT 
+                senhas.id_senha,
+                servicos.nome_servico,
+                utilizadores.nome AS nome_cliente,
+                senhas.data_hora_criacao,
+                senhas.data_hora_atendimento,
+                senhas.status
+            FROM sistema_senhas.senhas
+            INNER JOIN sistema_senhas.servicos ON senhas.id_servico = servicos.id_servico
+            INNER JOIN sistema_senhas.utilizadores ON senhas.id_utilizador = utilizadores.id_utilizador
+            WHERE senhas.id_local = :idLocal
+            AND senhas.status = 'concluido'
+            ORDER BY senhas.data_hora_atendimento DESC;
+        ";
+        
+    
+            // Preparar e executar a consulta
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':idLocal', $idLocal, PDO::PARAM_INT);
             $stmt->execute();
+    
+            // Retorna todos os resultados
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            error_log("Erro ao obter histórico: " . $e->getMessage());
+            echo "Erro: " . $e->getMessage();
             return [];
         }
     }
+
 
     // Gerar relatórios para o funcionário
     public function gerarRelatorios($idLocal) {

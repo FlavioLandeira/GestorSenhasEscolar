@@ -70,18 +70,6 @@ $fila = $controller->gerenciarFila();
                 <p>Não há clientes na fila no momento.</p>
             <?php endif; ?>
         </section>
-
-        <!-- Botão para Chamar o Próximo Cliente -->
-        <section class="chamar-cliente">
-            <form method="post">
-                <button type="submit" name="chamar" class="btn-chamar">Chamar Próximo Cliente</button>
-            </form>
-
-            <!-- Mensagem de Feedback -->
-            <?php if (isset($_SESSION['mensagem'])): ?>
-                <p class="mensagem"><?= htmlspecialchars($_SESSION['mensagem']); unset($_SESSION['mensagem']); ?></p>
-            <?php endif; ?>
-        </section>
     </main>
 </body>
 </html>
