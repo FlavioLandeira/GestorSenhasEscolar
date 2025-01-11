@@ -2,7 +2,7 @@
 Bem-vindo ao **SenhaSmart**, um sistema inovador desenvolvido para facilitar a organização e gestão de filas em uma escola. Este projeto visa melhorar a experiência de atendimento, otimizando filas e reduzindo o tempo de espera.
 
 ##  Link Alojamento Online
-O Alojamento online, está com mais restriçõe para não haver violação de dados, pois atualizei o código no infintyfree, e nao na pasta original, coloquei restrições como nao se poder eliminar um local com um servico associado e etc.
+O Alojamento online, está com mais restriçõe para não haver violação de dados, pois atualizei o código no infintyfree, e nao na pasta original, coloquei restrições do estilo de não se poder eliminar um local com um servico associado e etc.
 http://gestordesenhas.great-site.net/
 ---
 
